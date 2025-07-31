@@ -5,7 +5,7 @@ bag_recorder:
     bag_name: ""  # Empty for auto-generated timestamp
     
     # Current sensor topics (easily extensible)
-    topics: ["/imu/raw_data", "/fix"]
+    topics: ["/imu/data_raw", "/fix"]
     
     # Future sensor topics (uncomment as needed):
     # Camera topics:
