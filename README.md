@@ -4,12 +4,36 @@ ROS2 workspace for autonomous mobile robot localization using GNSS and IMU senso
 
 ## Quick Start
 
+### Option 1: Build All Packages
 ```bash
-# Build workspace
-cd /home/dev/ORobotics/localization_ws
+# Build entire workspace
 colcon build
 source install/setup.bash
+```
 
+### Option 2: Build GNSS/DGNSS Packages Only (Recommended)
+```bash
+# Use the automated build script for reproducible builds
+./build_gnss_packages.sh
+source install/setup.bash
+```
+
+### Option 3: Manual Sequential Build
+```bash
+# Step 1: Build core interfaces and nodes
+colcon build --packages-select ublox_ubx_interfaces ublox_ubx_msgs ublox_dgnss_node ublox_nav_sat_fix_hp_node ntrip_client_node
+
+# Step 2: Build main DGNSS package
+colcon build --packages-select ublox_dgnss
+
+# Step 3: Build IMU package
+colcon build --packages-select wit_ros2_imu
+
+source install/setup.bash
+```
+
+### Launch System
+```bash
 # Launch localization
 ros2 launch gnss_imu_robot_localization bringup.launch.py
 
@@ -21,11 +45,28 @@ ros2 launch gnss_imu_robot_localization bringup.launch.py \
 
 ## Packages
 
-- **gnss_imu_robot_localization** - Main localization system
-- **bag_recorder** - Sensor data recording
-- **wit_ros2_imu** - IMU driver
-- **ublox_dgnss*** - GNSS drivers
-- **amr_sweeper_description** - Robot description
+### Core Localization
+- **gnss_imu_robot_localization** - Main localization system using EKF
+- **bag_recorder** - Sensor data recording utility
+- **imu_offset_calibration** - IMU calibration tools
+- **amr_sweeper_description** - Robot description files
+
+### GNSS/DGNSS Stack
+- **ublox_ubx_interfaces** - UBlox UBX message interfaces
+- **ublox_ubx_msgs** - UBlox UBX message definitions
+- **ublox_dgnss_node** - Main DGNSS receiver node
+- **ublox_nav_sat_fix_hp_node** - High-precision navigation satellite fix
+- **ntrip_client_node** - NTRIP client for RTK corrections
+- **ublox_dgnss** - Main UBlox DGNSS package
+- **rtcm_msgs** - RTCM message definitions
+
+### IMU
+- **wit_ros2_imu** - WIT IMU driver
+
+### Navigation2 Demos (Optional)
+- **nav2_costmap_filters_demo** - Costmap filters demonstration
+- **nav2_gps_waypoint_follower_demo** - GPS waypoint following
+- **nav2_gradient_costmap_plugin** - Custom costmap plugin
 
 ## Additional Dependencies
 
@@ -47,6 +88,46 @@ sudo apt install -y python3-serial
 # Build tools (if not already installed)
 sudo apt install -y python3-colcon-common-extensions
 ```
+
+## Reproducible Build Process
+
+For new device setup, the GNSS/DGNSS packages must be built in a specific order due to dependencies:
+
+### Automated Build (Recommended)
+Use the provided build script:
+```bash
+./build_gnss_packages.sh
+```
+
+### Manual Build Order
+If building manually, follow this exact sequence:
+
+1. **First batch** (can be built in parallel):
+   ```bash
+   colcon build --packages-select ublox_ubx_interfaces ublox_ubx_msgs ublox_dgnss_node ublox_nav_sat_fix_hp_node ntrip_client_node
+   ```
+
+2. **Second batch** (depends on first batch):
+   ```bash
+   colcon build --packages-select ublox_dgnss
+   ```
+
+3. **IMU package** (independent):
+   ```bash
+   colcon build --packages-select wit_ros2_imu
+   ```
+
+### Why This Order Matters
+- `ublox_ubx_interfaces` and `ublox_ubx_msgs` provide message definitions needed by other packages
+- `ublox_dgnss_node`, `ublox_nav_sat_fix_hp_node`, and `ntrip_client_node` depend on the message definitions
+- `ublox_dgnss` is a meta-package that depends on all the above components
+- `wit_ros2_imu` is independent and can be built separately
+
+### Troubleshooting Build Issues
+- If packages fail to build, clean the workspace: `rm -rf build/ install/ log/`
+- Ensure ROS2 environment is sourced: `source /opt/ros/humble/setup.bash`
+- Check that all dependencies are installed (see Additional Dependencies section)
+- Use the automated build script to ensure correct build order
 
 ## Build Commands
 

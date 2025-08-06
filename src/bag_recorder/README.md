@@ -15,19 +15,33 @@ A production-ready, scalable ROS2 package for recording sensor data to bag files
 
 ## Quick Start
 
+**⚠️ Prerequisites**: Before running the bag recorder, you must first start the localization system to generate the sensor data topics:
+
+```bash
+# Terminal 1: Start the localization system (required first)
+source install/setup.bash
+ros2 launch gnss_imu_robot_localization bringup.launch.py
+```
+
+Then in a new terminal, start recording:
+
 ### Basic Recording (Default Settings)
 ```bash
+# Terminal 2: Start bag recording
 source install/setup.bash
 ros2 launch bag_recorder bag_record_yaml.launch.py
 ```
 
 ### Compressed Recording (Recommended)
 ```bash
+# Terminal 2: Start compressed bag recording
+source install/setup.bash
 ros2 launch bag_recorder bag_record_yaml.launch.py config_file:="compressed_config.yaml"
 ```
 
 ### Using Convenience Script
 ```bash
+# Terminal 2: Using convenience script
 ./src/bag_recorder/scripts/start_recording_yaml.sh compressed_config.yaml
 ```
 
