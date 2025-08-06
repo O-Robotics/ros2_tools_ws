@@ -48,62 +48,6 @@ sudo apt install -y python3-serial
 sudo apt install -y python3-colcon-common-extensions
 ```
 
-## File Structure
-
-```
-localization_ws/
-├── src/
-│   ├── gnss_imu_robot_localization/        # Main localization package
-│   │   ├── launch/
-│   │   │   ├── bringup.launch.py           # Main system launch
-│   │   │   └── ekf_odm.launch.py           # EKF-only launch
-│   │   ├── config/
-│   │   │   └── ekf_params.yaml             # EKF configuration
-│   │   ├── package.xml
-│   │   ├── setup.py
-│   │   └── README.md
-│   ├── bag_recorder/                       # Sensor data recording
-│   │   ├── bag_recorder/
-│   │   │   ├── __init__.py
-│   │   │   ├── bag_recorder.py             # Main recording node
-│   │   │   └── bag_recorder_node.py        # ROS2 executable
-│   │   ├── config/
-│   │   │   ├── bag_config.yaml             # Default config
-│   │   │   ├── compressed_config.yaml      # Compressed recording
-│   │   │   └── extended_sensors_config.yaml # Future sensors
-│   │   ├── launch/
-│   │   │   ├── bag_record.launch.py        # Parameter-based launch
-│   │   │   └── bag_record_yaml.launch.py   # YAML-based launch
-│   │   ├── scripts/
-│   │   │   ├── start_recording.sh          # Convenience script
-│   │   │   └── start_recording_yaml.sh     # YAML convenience script
-│   │   ├── package.xml
-│   │   ├── setup.py
-│   │   └── README.md
-│   ├── wit_ros2_imu/                       # IMU driver
-│   │   ├── wit_ros2_imu/
-│   │   │   ├── __init__.py
-│   │   │   └── wit_ros2_imu.py             # IMU driver (10Hz)
-│   │   ├── launch/
-│   │   │   └── rviz_and_imu.launch.py      # IMU launch
-│   │   ├── package.xml
-│   │   ├── setup.py
-│   │   └── README.md
-│   ├── ublox_dgnss/                        # GNSS base driver
-│   ├── ublox_dgnss_node/                   # GNSS node
-│   ├── ublox_nav_sat_fix_hp_node/          # High-precision GNSS
-│   └── amr_sweeper_description/            # Robot description
-│       ├── urdf/
-│       ├── launch/
-│       │   └── rsp.launch.py               # Robot state publisher
-│       └── package.xml
-├── build/                                  # Build artifacts (auto-generated)
-├── install/                                # Installation files (auto-generated)
-├── log/                                    # Build logs (auto-generated)
-├── rebuild.sh                              # Workspace rebuild script
-└── README.md                               # This file
-```
-
 ## Build Commands
 
 ```bash
