@@ -4,24 +4,25 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
-from launch_ros.actions import ComposableNodeContainer
+from launch_ros.actions import ComposableNodeContainer, WaitForTopics
 from launch_ros.descriptions import ComposableNode
 
 
 def generate_launch_description():
-    # Declare launch arguments for bag recording
+    # ---- Launch args ----
     enable_bag_recording_arg = DeclareLaunchArgument(
         'enable_bag_recording',
         default_value='false',
         description='Enable automatic bag recording during localization'
     )
-    
+
     bag_config_file_arg = DeclareLaunchArgument(
         'bag_config_file',
         default_value='bag_config.yaml',
         description='YAML config file for bag recording (bag_config.yaml, compressed_config.yaml, extended_sensors_config.yaml)'
     )
-    
+
+    # ---- GNSS (u-blox) params ----
     ublox_params = [
         {'CFG_USBOUTPROT_NMEA': False},
         {'CFG_RATE_MEAS': 10},
@@ -54,7 +55,19 @@ def generate_launch_description():
         ]
     )
 
-    # Bag recorder integration (optional)
+    # ---- Wait until critical topics are visible, THEN start recording ----
+    # Adjust topic names if your drivers publish differently.
+    wait_for_sensors = WaitForTopics(
+        topics=[
+            '/imu/raw_data',  # IMU raw/data topic used by your recorder
+            '/fix',           # GNSS NavSatFix
+            '/tf',            # TF tree being published (e.g., by robot_state_publisher)
+            '/tf_static'      # Optionally add '/tf_static' if you want to enforce it too
+        ],
+        timeout=20.0  # generous to survive cold GNSS/slow bringup
+    )
+
+    # ---- Bag recorder (conditional include) ----
     bag_recorder = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([
@@ -70,10 +83,10 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        # Launch arguments
+        # Args
         enable_bag_recording_arg,
         bag_config_file_arg,
-        
+
         # URDF + TF
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -108,7 +121,10 @@ def generate_launch_description():
                 ])
             )
         ),
-        
+
+        # Only after these topics are visible, proceed to the recorder
+        wait_for_sensors,
+
         # Bag recorder (conditional)
         bag_recorder,
     ])

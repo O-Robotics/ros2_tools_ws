@@ -1,7 +1,7 @@
 bag_recorder:
   ros__parameters:
     # Output configuration
-    output_dir: "~/ros2_bags"
+    output_dir: "/home/alfol/ros2_bags"
     bag_name: ""  # Empty for auto-generated timestamp
     
     # Current sensor topics (easily extensible)

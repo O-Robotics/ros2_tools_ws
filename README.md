@@ -165,6 +165,4 @@ rm -rf build/package_name install/package_name
 - WIT motion sensor IMU
 - USB connections
 
----
 
-**Status**: Production Ready

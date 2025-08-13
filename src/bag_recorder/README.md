@@ -364,6 +364,57 @@ ros2 launch bag_recorder bag_record.launch.py \
     bag_name:="mission_$(date +%Y%m%d_%H%M%S)"
 ```
 
+### Direct ros2 bag record Command
+```bash
+# Source workspace and create output directory
+source install/setup.bash && mkdir -p ~/ros2_bags
+
+# Record sensor data with timestamp-based naming and 10-second duration limit
+ros2 bag record -o ~/ros2_bags/sensor_data_$(date +%Y%m%d_%H%M%S) /imu/data_raw /fix --max-bag-duration 10
+
+# Record with custom parameters
+ros2 bag record -o ~/ros2_bags/my_recording /imu/data_raw /fix --max-bag-duration 60 --compression-mode file
+
+# Record unlimited duration (press Ctrl+C to stop)
+ros2 bag record -o ~/ros2_bags/continuous_recording /imu/data_raw /fix
+```
+
+## Working with Recorded Data
+
+### View Bag Information
+```bash
+# Check bag file details, topics, and message counts
+ros2 bag info ~/ros2_bags/sensor_data_20250806_154235
+
+# View specific topic information
+ros2 bag info ~/ros2_bags/sensor_data_20250806_154235 --verbose
+```
+
+### Play Recorded Data
+```bash
+# Play back recorded data at normal speed
+ros2 bag play ~/ros2_bags/sensor_data_20250806_154235
+
+# Play at different speeds
+ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --rate 0.5  # Half speed
+ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --rate 2.0  # Double speed
+
+# Play specific topics only
+ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --topics /imu/data_raw
+
+# Loop playback
+ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --loop
+```
+
+### Export and Analysis
+```bash
+# Convert bag to CSV for analysis
+ros2 bag convert --input ~/ros2_bags/sensor_data_20250806_154235 --output-format csv
+
+# List all messages in a topic
+ros2 topic echo /imu/data_raw --once  # While playing bag
+```
+
 ## Package Structure
 
 ```
