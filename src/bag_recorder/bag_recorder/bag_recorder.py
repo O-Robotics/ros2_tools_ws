@@ -19,7 +19,7 @@ class BagRecorder(Node):
         self.declare_parameter('bag_name', '')
         
         # Current sensor topics - easily extensible
-        self.declare_parameter('topics', ['/imu/raw_data', '/fix'])
+        self.declare_parameter('topics', ['/imu/data_raw', '/fix'])
         
         # Future sensor topics (commented for extension):
         # Camera topics: ['/camera/image_raw', '/camera/camera_info']
