@@ -59,7 +59,7 @@ def generate_launch_description():
     # Adjust topic names if your drivers publish differently.
     wait_for_sensors = WaitForTopics(
         topics=[
-            '/imu/raw_data',  # IMU raw/data topic used by your recorder
+            '/imu/data_raw',  # IMU raw/data topic used by your recorder
             '/fix',           # GNSS NavSatFix
             '/tf',            # TF tree being published (e.g., by robot_state_publisher)
             '/tf_static'      # Optionally add '/tf_static' if you want to enforce it too
