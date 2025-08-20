@@ -1,5 +1,6 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
@@ -8,6 +9,11 @@ from launch_ros.descriptions import ComposableNode
 
 
 def generate_launch_description():
+    # Optional RViz toggle
+    start_rviz_arg = DeclareLaunchArgument(
+        'start_rviz', default_value='true',
+        description='Start RViz with a preconfigured layout')
+
     # URDF + TF
     amr_rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -122,7 +128,24 @@ def generate_launch_description():
         ]
     )
 
+    # Optional RViz with preconfigured displays
+    rviz_config = PathJoinSubstitution([
+        FindPackageShare('gnss_imu_robot_localization'),
+        'rviz',
+        'rl_viz.rviz'
+    ])
+
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', rviz_config],
+        condition=IfCondition(LaunchConfiguration('start_rviz'))
+    )
+
     return LaunchDescription([
+        start_rviz_arg,
         amr_rsp,
         imu_launch,
         ublox_container,
@@ -130,4 +153,5 @@ def generate_launch_description():
         ekf_local,
         navsat_transform,
         ekf_map,
+        rviz_node,
     ])

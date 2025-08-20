@@ -1,0 +1,72 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Selection
+    Name: Selection
+  - Class: rviz_common/Tool Properties
+    Name: Tool Properties
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Name: RobotModel
+      Description Source: Topic
+      Visual Enabled: true
+      Collision Enabled: false
+      Alpha: 1.0
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Name: TF
+    - Class: rviz_default_plugins/Axes
+      Enabled: true
+      Name: IMU Axes
+      Reference Frame: IMU_link
+      Length: 0.15
+      Radius: 0.01
+    - Class: rviz_default_plugins/Axes
+      Enabled: true
+      Name: GNSS Axes
+      Reference Frame: GNSS_link
+      Length: 0.2
+      Radius: 0.012
+    - Class: rviz_default_plugins/Odometry
+      Enabled: true
+      Name: Odom Local
+      Topic: /odometry/filtered/local
+      Shape: Arrow
+      Color: 25; 255; 240
+    - Class: rviz_default_plugins/Odometry
+      Enabled: true
+      Name: GPS Filtered
+      Topic: /gps/filtered
+      Shape: Arrow
+      Color: 255; 210; 25
+    - Class: rviz_default_plugins/Odometry
+      Enabled: true
+      Name: Odom Global
+      Topic: /odometry/filtered/global
+      Shape: Arrow
+      Color: 180; 25; 255
+    - Class: rviz_default_plugins/Axes
+      Enabled: true
+      Name: Base Axes
+      Reference Frame: base_link
+      Length: 0.5
+      Radius: 0.02
+  Global Options:
+    Fixed Frame: map
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/Measure
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 10
+      Pitch: 0.5
+      Yaw: 0.5
+      Target Frame: map
