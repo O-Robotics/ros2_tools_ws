@@ -125,3 +125,5 @@ frames_*.pdf
 
 # Custom workspace-specific ignores
 # Add any project-specific files to ignore here
+robot_localization_debug.txt
+robot_localization_debug.txt
