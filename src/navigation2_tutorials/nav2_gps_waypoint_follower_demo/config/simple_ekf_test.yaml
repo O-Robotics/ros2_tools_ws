@@ -3,7 +3,7 @@
 
 ekf_filter_node_odom:
   ros__parameters:
-    frequency: 5.0  # Reduced to fix update rate warnings
+    frequency: 2.0  # Further reduced for better performance
     two_d_mode: true
     print_diagnostics: true
     debug: false
