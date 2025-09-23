@@ -4,22 +4,22 @@
     <gazebo>
         <plugin 
             filename="gz-sim-diff-drive-system"
-            name="gz::sim::systems::DiffDrive" >
+            name="gz::sim::systems::DiffDrive">
 
-            <!-- Wheel Information -->
-            <left_joint>LeftWheel_joint</left_joint>
-            <right_joint>RightWheel_joint</right_joint>
+            <!-- wheel information -->
+            <left_joint>left_wheel_joint</left_joint>
+            <right_joint>right_wheel_joint</right_joint>
             <wheel_separation>0.488</wheel_separation>
             <wheel_radius>0.130</wheel_radius>
 
-            <!-- Limits -->
+            <!-- limits -->
             <max_wheel_torque>200</max_wheel_torque>
             <max_linear_acceleration>0.33</max_linear_acceleration>
 
-            <!-- Input -->
+            <!-- input -->
             <topic>cmd_vel</topic>
             
-            <!-- Output -->
+            <!-- output -->
             <frame_id>odom</frame_id>
             <child_frame_id>base_link</child_frame_id>
 
@@ -29,13 +29,12 @@
             <tf_topic>/tf</tf_topic>
         </plugin>
 
-
         <plugin 
             filename="gz-sim-joint-state-publisher-system" 
             name="gz::sim::systems::JointStatePublisher">
-                <topic>joint_states</topic>
-                <joint_name>LeftWheel_joint</joint_name>
-                <joint_name>RightWheel_joint</joint_name>
+            <topic>joint_states</topic>
+            <joint_name>left_wheel_joint</joint_name>
+            <joint_name>right_wheel_joint</joint_name>
         </plugin>
         
     </gazebo>

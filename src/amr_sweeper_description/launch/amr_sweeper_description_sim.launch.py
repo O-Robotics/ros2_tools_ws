@@ -71,10 +71,10 @@ def generate_launch_description():
 
 
     # Spawn Sweepe in Gazebo
-    spawn_AMRSweeper_sim = Node(                                #note AMR-Sweeper name without "-" due to python
+    spawn_amrsweeper_sim = Node(                                #note AMR-Sweeper name without "-" due to python
         package='ros_gz_sim', 
         executable='create',
-        arguments=['-topic', 'robot_description', '-name', 'AMR-Sweeper_description', '-z', '0.13'],
+        arguments=['-topic', 'robot_description', '-name', 'amr_sweeper_description', '-z', '0.13'],
         output='screen'
     )
 
@@ -106,7 +106,7 @@ def generate_launch_description():
         rviz2,
         world_arg,
         gz_sim,
-        spawn_AMRSweeper_sim,                       #note AMR-Sweeper name without "-"
+        spawn_amrsweeper_sim,                       #note AMR-Sweeper name without "-"
         ros_gz_bridge,
         ros_gz_image_bridge
     ])

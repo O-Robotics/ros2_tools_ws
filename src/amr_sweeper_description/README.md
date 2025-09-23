@@ -27,7 +27,7 @@ Navigate to your ROS 2 workspace's `src` directory and clone the repository:
 
 ```bash
 cd ~/ros2_ws/src
-git clone https://github.com/O-Robotics/AMR-Sweeper_description.git
+git clone https://github.com/O-Robotics/amr_sweeper_description.git
 ```
 
 
@@ -89,7 +89,7 @@ To launch the robot's description in RViz:
 
 
 ```bash
-ros2 launch AMR-Sweeper_description rsp.launch.py
+ros2 launch amr_sweeper_description rsp.launch.py
 ```
 
 
@@ -99,7 +99,7 @@ To launch the robot in a Gazebo simulation environment:
 
 
 ```bash
-ros2 launch AMR-Sweeper_description AMR-Sweeper_description_sim.launch.py
+ros2 launch amr_sweeper_description amr-sweeper_description_sim.launch.py
 ```
 
 

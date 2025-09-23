@@ -1,201 +1,175 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-
-    <link name="base_link">
-    </link>
+    <link name="base_link"/>
 
     <joint name="base_footprint_joint" type="fixed">
-        <parent link="base_link" />
-        <child  link="base_footprint" />
+        <parent link="base_link"/>
+        <child link="base_footprint"/>
         <origin xyz="0 0 -0.13" rpy="0 0 0"/>
     </joint>
 
-    <link name="base_footprint">
-    </link>
+    <link name="base_footprint"/>
 
-
-    <joint name="Chassis_joint" type="fixed">
-        <parent link="base_link" />
-        <child  link="Chassis_link" />
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
-    <link name="Chassis_link">
+    <link name="chassis_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>           
-                <mesh   filename="package://AMR-Sweeper_description/meshes/Chassis/Chassis.stl" />  
-            </geometry>   
-            <material name="grey"/>     
+            <geometry>
+                <mesh filename="package://amr_sweeper_description/meshes/chassis/v2025_09/chassis_assembly.stl"/>
+            </geometry>
+            <material name="grey"/>
         </visual>
-<!--
+        <!--
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>           
-                <mesh   filename="package://AMR-Sweeper_description/meshes/Chassis/Chassis.stl" />  
-            </geometry>     
+            <geometry>
+                <mesh filename="package://amr_sweeper_description/meshes/chassis/v2025_09/chassis_assembly.stl"/>
+            </geometry>
         </collision>
--->
+        -->
         <inertial>
             <origin xyz="0.054 0 0.110" rpy="0 0 0"/>
-            <mass value="15.4" />
-            <inertia ixx="0.2" ixy="0.002" ixz="-0.010" iyy="0.376" iyz="0.000" izz="0.508" />
+            <mass value="15.4"/>
+            <inertia ixx="0.2" ixy="0.002" ixz="-0.010" iyy="0.376" iyz="0.000" izz="0.508"/>
         </inertial>
     </link>
 
-
-
-
-    <joint name="LeftWheel_joint" type="continuous">
-        <parent link="base_link" />
-        <child  link="LeftWheel_link" />
-        <origin xyz="0 0.244 0" rpy="-${pi/2} 0 0" />
-        <axis   xyz="0 0 1" />
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_wheel_link"/>
+        <origin xyz="0 0.244 0" rpy="-${pi/2} 0 0"/>
+        <axis xyz="0 0 1"/>
     </joint>
 
-    <link name="LeftWheel_link">
+    <link name="left_wheel_link">
         <visual>
             <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/WheelAssembly/WheelAssembly.stl" />  
+                <mesh filename="package://amr_sweeper_description/meshes/wheel_assembly/v2025_09/wheel_assembly.stl"/>
             </geometry>
-            <material name="yellow"/>       
+            <material name="yellow"/>
         </visual>
-
         <collision>
             <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/WheelAssembly/WheelAssembly.stl" />
-            </geometry>       
+                <mesh filename="package://amr_sweeper_description/meshes/wheel_assembly/v2025_09/wheel_assembly.stl"/>
+            </geometry>
         </collision>
-
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.5" />
-            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01" />
+            <mass value="1.5"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01"/>
         </inertial>
     </link>
 
-
-
-
-    <joint name="RightWheel_joint" type="continuous">
-        <parent link="base_link" />
-        <child  link="RightWheel_link" />
-        <origin xyz="0 -0.244 0" rpy="${pi/2} 0 0" />
-        <axis   xyz="0 0 -1" />
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel_link"/>
+        <origin xyz="0 -0.244 0" rpy="${pi/2} 0 0"/>
+        <axis xyz="0 0 -1"/>
     </joint>
 
-    <link name="RightWheel_link">
+    <link name="right_wheel_link">
         <visual>
             <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/WheelAssembly/WheelAssembly.stl" />  
+                <mesh filename="package://amr_sweeper_description/meshes/wheel_assembly/v2025_09/wheel_assembly.stl"/>
             </geometry>
-            <material name="yellow"/>       
+            <material name="yellow"/>
         </visual>
-
         <collision>
             <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/WheelAssembly/WheelAssembly.stl" />
-            </geometry>       
+                <mesh filename="package://amr_sweeper_description/meshes/wheel_assembly/v2025_09/wheel_assembly.stl"/>
+            </geometry>
         </collision>
-
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.5" />
-            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01" />
+            <mass value="1.5"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01"/>
         </inertial>
     </link>
 
-
-
-
-    <joint name="Tool_joint" type="fixed">
-        <origin xyz="0.33 0 0.075" rpy="0 0 0" />
-        <parent link="base_link" />
-        <child  link="Tool_link" />
-        <axis   xyz="1 0 0" />
-        <!--<limit  lower="-${pi/18}" upper="${pi/18}" velocity="100" effort="100"/>  -->
+    <joint name="tool_joint" type="fixed">
+        <origin xyz="0.33 0 0.075" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="tool_link"/>
+        <axis xyz="1 0 0"/>
+        <!--<limit lower="-${pi/18}" upper="${pi/18}" velocity="100" effort="100"/>-->
     </joint>
 
-    <link name="Tool_link">
+    <link name="tool_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/Tool/Tool.stl" />  
+                <mesh filename="package://amr_sweeper_description/meshes/tool/v2025_09/tool_mount.stl"/>
             </geometry>
-            <material name="black"/>       
+            <material name="black"/>
         </visual>
-
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="2.5" />
-            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01" />
+            <mass value="2.5"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01"/>
         </inertial>
     </link>
 
-
-
-    <joint name="LeftBrush_joint" type="fixed">
-        <origin xyz="0 -0.155 -0.073" rpy="0 0 0" />
-        <parent link="Tool_link" />
-        <child  link="LeftBrush_link" />
+    <joint name="left_brush_joint" type="fixed">
+        <origin xyz="0 -0.155 -0.073" rpy="0 0 0"/>
+        <parent link="tool_link"/>
+        <child link="left_brush_link"/>
     </joint>
 
-    <link name="LeftBrush_link">
+    <link name="left_brush_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/Tool/Brush.stl" />  
+                <mesh filename="package://amr_sweeper_description/meshes/tool/v2025_09/nylon_brush.stl"/>
             </geometry>
-            <material name="red"/>       
+            <material name="red"/>
         </visual>
-
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/Tool/Brush.stl" />  
-            </geometry>       
+                <mesh filename="package://amr_sweeper_description/meshes/tool/v2025_09/nylon_brush.stl"/>
+            </geometry>
         </collision>
-
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.5" />
-            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01" />
+            <mass value="1.5"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01"/>
         </inertial>
     </link>
 
-
-
-    <joint name="RightBrush_joint" type="fixed">
-        <origin xyz="0 0.155 -0.073" rpy="0 0 0" />
-        <parent link="Tool_link" />
-        <child  link="RightBrush_link" />
+    <joint name="right_brush_joint" type="fixed">
+        <origin xyz="0 0.155 -0.073" rpy="0 0 0"/>
+        <parent link="tool_link"/>
+        <child link="right_brush_link"/>
     </joint>
 
-    <link name="RightBrush_link">
+    <link name="right_brush_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/Tool/Brush.stl" />  
+                <mesh filename="package://amr_sweeper_description/meshes/tool/v2025_09/nylon_brush.stl"/>
             </geometry>
-            <material name="red"/>       
+            <material name="red"/>
         </visual>
-
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-                <mesh   filename="package://AMR-Sweeper_description/meshes/Tool/Brush.stl" />  
-            </geometry>       
+                <mesh filename="package://amr_sweeper_description/meshes/tool/v2025_09/nylon_brush.stl"/>
+            </geometry>
         </collision>
-
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.5" />
-            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01" />
+            <mass value="1.5"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.01"/>
         </inertial>
     </link>
 
