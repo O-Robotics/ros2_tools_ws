@@ -22,6 +22,23 @@ def generate_launch_description():
         description='YAML config file for bag recording (bag_config.yaml, compressed_config.yaml, extended_sensors_config.yaml)'
     )
 
+    # ---- C2D receiver args ----
+    c2d_connection_string_arg = DeclareLaunchArgument(
+        'c2d_connection_string',
+        default_value='',
+        description='Azure IoT Hub device connection string for C2D receiver (optional, can be provided via env_file)'
+    )
+    c2d_env_file_arg = DeclareLaunchArgument(
+        'c2d_env_file',
+        default_value='/home/dev/ORobotics/secrets/.env',
+        description='Path to .env containing IOTHUB_DEVICE_CONNECTION_STRING for C2D receiver'
+    )
+    c2d_save_dir_arg = DeclareLaunchArgument(
+        'c2d_save_dir',
+        default_value='/home/dev/ORobotics/localization_ws/src/iot_c2d_receiver/waypoints',
+        description='Directory to store waypoint YAMLs for C2D receiver'
+    )
+
     # ---- GNSS (u-blox) params ----
     ublox_params = [
         {'CFG_USBOUTPROT_NMEA': False},
@@ -86,6 +103,9 @@ def generate_launch_description():
         # Args
         enable_bag_recording_arg,
         bag_config_file_arg,
+        c2d_connection_string_arg,
+        c2d_env_file_arg,
+        c2d_save_dir_arg,
 
         # URDF + TF
         IncludeLaunchDescription(
@@ -120,6 +140,22 @@ def generate_launch_description():
                     'ekf_odm.launch.py'
                 ])
             )
+        ),
+
+        # C2D Receiver (Azure IoT Hub -> save waypoints)
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution([
+                    FindPackageShare('iot_c2d_receiver'),
+                    'launch',
+                    'c2d_receiver.launch.py'
+                ])
+            ),
+            launch_arguments={
+                'connection_string': LaunchConfiguration('c2d_connection_string'),
+                'env_file': LaunchConfiguration('c2d_env_file'),
+                'save_dir': LaunchConfiguration('c2d_save_dir'),
+            }.items()
         ),
 
         # Only after these topics are visible, proceed to the recorder
