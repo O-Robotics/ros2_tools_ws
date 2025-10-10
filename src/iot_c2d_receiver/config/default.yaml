@@ -1,0 +1,5 @@
+c2d_receiver:
+  ros__parameters:
+    connection_string: ''
+    save_dir: '/home/dev/ORobotics/localization_ws/src/iot_c2d_receiver/waypoints'
+    env_file: '/home/dev/ORobotics/secrets/.env'

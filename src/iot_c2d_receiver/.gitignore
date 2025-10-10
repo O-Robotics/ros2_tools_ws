@@ -1,0 +1,6 @@
+# Ignore generated waypoint data
+waypoints/
+
+# Optional: common Python build artifacts (uncomment if desired)
+# __pycache__/
+# *.pyc
