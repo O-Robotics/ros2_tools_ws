@@ -32,26 +32,29 @@ fi
 # rm -rf build/ install/ log/
 
 echo "Building all workspace packages in dependency order..."
-
-# Step 1: Build core localization packages (independent)
+echo "Building IMU and GNSS packages in parallel..."
+colcon build \
+  --packages-select rtcm_msgs \
+                    ublox_ubx_interfaces \
+                    ublox_ubx_msgs \
+                    ublox_dgnss_node \
+                    ublox_nav_sat_fix_hp_node \
+                    ntrip_client_node \
+                    ublox_dgnss \
+                    wit_ros2_imu \
+  --symlink-install \
+  -j$(nproc)
+  
+#Build other localization packages (independent)
 echo ""
 echo "Step 1/4: Building core localization packages..."
-colcon build --packages-select amr_sweeper_description bag_recorder gnss_imu_robot_localization imu_offset_calibration rtcm_msgs
+colcon build --packages-select amr_sweeper_description bag_recorder gnss_imu_robot_localization imu_offset_calibration
 
-# Step 2: Build GNSS/DGNSS interface and message packages
-echo ""
-echo "Step 2/4: Building GNSS interfaces and messages..."
-colcon build --packages-select ublox_ubx_interfaces ublox_ubx_msgs ublox_dgnss_node ublox_nav_sat_fix_hp_node ntrip_client_node
-
-# Step 3: Build main DGNSS package and working Nav2 demos
+#Build main DGNSS package and working Nav2 demos
 echo ""
 echo "Step 3/4: Building DGNSS package and Nav2 demos..."
-colcon build --packages-select ublox_dgnss nav2_costmap_filters_demo nav2_gps_waypoint_follower_demo
+colcon build --packages-select nav2_costmap_filters_demo nav2_gps_waypoint_follower_demo
 
-# Step 4: Build IMU package
-echo ""
-echo "Step 4/4: Building IMU package..."
-colcon build --packages-select wit_ros2_imu
 
 echo ""
 echo "=========================================="
