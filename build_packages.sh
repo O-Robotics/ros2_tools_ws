@@ -34,16 +34,13 @@ fi
 echo "Building all workspace packages in dependency order..."
 echo "Building IMU and GNSS packages in parallel..."
 colcon build \
-  --packages-select rtcm_msgs \
-                    ublox_ubx_interfaces \
-                    ublox_ubx_msgs \
-                    ublox_dgnss_node \
-                    ublox_nav_sat_fix_hp_node \
-                    ntrip_client_node \
-                    ublox_dgnss \
-                    wit_ros2_imu \
-  --symlink-install \
-  -j$(nproc)
+  --packages-select rtcm_msgs ublox_ubx_interfaces ublox_ubx_msgs \
+                    ublox_dgnss_node ublox_nav_sat_fix_hp_node \
+                    ntrip_client_node ublox_dgnss wit_ros2_imu \
+  # --symlink-install \ # only for testing
+  --executor sequential \
+  --parallel-workers $(nproc)
+
   
 #Build other localization packages (independent)
 echo ""
