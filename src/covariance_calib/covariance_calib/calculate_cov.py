@@ -6,12 +6,12 @@ Analyzes recorded bag data and calculates optimal covariance values.
 
 import argparse
 import sys
+import yaml
 from pathlib import Path
 from ament_index_python.packages import get_package_share_directory
 
-# Import the existing calculation logic
-sys.path.append(str(Path(__file__).parent.parent / 'tools' / 'localization_calib' / 'calculate'))
-from calculate_cov import CovarianceCalculator, BagReader, generate_summary_report
+# Import the calculation logic from our own module
+from .calculation_core import CovarianceCalculator, BagReader, generate_summary_report
 
 
 def main():
@@ -63,10 +63,12 @@ Examples:
             config_path = Path(package_share_directory) / 'config' / 'config.yaml'
         except Exception:
             # Fallback to local path for development
-            config_path = Path(__file__).parent.parent / 'tools' / 'localization_calib' / 'calculate' / 'config.yaml'
+            config_path = Path(__file__).parent.parent / 'config' / 'config.yaml'
         
-        # Initialize calculator
-        calculator = CovarianceCalculator(str(config_path))
+        # Load config and initialize calculator
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f)
+        calculator = CovarianceCalculator(config)
         
         # Set up paths
         bags_root = Path(args.bags_root)
