@@ -22,7 +22,7 @@ def generate_launch_description():
     
     topics_arg = DeclareLaunchArgument(
         'topics',
-        default_value='["/imu/raw_data", "/fix"]',
+        default_value='["/navigation_layer/odometry/global", "/navigation_layer/odometry/local", "/hardware_layer/diff_cont/odom", "/hardware_layer/imu/data_raw", "/navsat", "/hardware_layer/joint_states"]',
         description='List of topics to record'
     )
     
@@ -65,7 +65,14 @@ def generate_launch_description():
         parameters=[{
             'output_dir': LaunchConfiguration('output_dir'),
             'bag_name': LaunchConfiguration('bag_name'),
-            'topics': ['/imu/raw_data', '/fix'],  # Default topics
+            'topics': [
+                '/navigation_layer/odometry/global',
+                '/navigation_layer/odometry/local', 
+                '/hardware_layer/diff_cont/odom',
+                '/hardware_layer/imu/data_raw',
+                '/navsat',
+                '/hardware_layer/joint_states'
+            ],  # Default topics
             'max_bag_duration': LaunchConfiguration('max_duration'),
             'max_bag_size': LaunchConfiguration('max_size'),
             'compression_mode': LaunchConfiguration('compression_mode'),
@@ -78,7 +85,7 @@ def generate_launch_description():
     log_info = LogInfo(
         msg=[
             'Starting sensor data bag recording...\n',
-            'Default topics: /imu/raw_data, /fix\n',
+            'Default topics: navigation, hardware layer, and sensor topics\n',
             'Output directory: ', LaunchConfiguration('output_dir'), '\n',
             'Press Ctrl+C to stop recording'
         ]

@@ -5,7 +5,14 @@ bag_recorder:
     bag_name: "compressed_recording"
     
     # Sensor topics
-    topics: ["/imu/raw_data", "/fix"]
+    topics: [
+      "/navigation_layer/odometry/global",
+      "/navigation_layer/odometry/local",
+      "/hardware_layer/diff_cont/odom",
+      "/hardware_layer/imu/data_raw",
+      "/navsat",
+      "/hardware_layer/joint_states"
+    ]
     
     # Recording limits
     max_bag_duration: 300  # 5 minutes

@@ -4,7 +4,7 @@ A production-ready, scalable ROS2 package for recording sensor data to bag files
 
 ## Features
 
-- **Current Sensors**: Records `/imu/raw_data` and `/fix` topics by default
+- **Current Sensors**: Records navigation, hardware layer, and sensor topics by default
 - **Extensible Architecture**: Easy to add camera, wheel odometry, lidar, etc.
 - **Configurable Parameters**: Output directory, bag naming, duration/size limits
 - **Compression Support**: File-level compression with zstd
@@ -161,8 +161,12 @@ def generate_launch_description():
 ## Topics Recorded
 
 By default, this package records:
-- `/imu/raw_data` - Raw IMU sensor data
-- `/fix` - GNSS fix data
+- `/navigation_layer/odometry/global` - Global odometry data
+- `/navigation_layer/odometry/local` - Local odometry data
+- `/hardware_layer/diff_cont/odom` - Differential controller odometry
+- `/hardware_layer/imu/data_raw` - Raw IMU sensor data
+- `/navsat` - Navigation satellite data
+- `/hardware_layer/joint_states` - Joint state information
 
 ## Output
 
@@ -249,7 +253,7 @@ ros2 launch bag_recorder bag_record.launch.py \
 |-----------|------|---------|-------------|
 | `output_dir` | string | `/home/dev/ros2_bags` | Directory for bag files |
 | `bag_name` | string | `sensor_data` | Base name for bag files |
-| `topics` | string[] | `['/imu/raw_data', '/fix']` | Topics to record |
+| `topics` | string[] | `['/navigation_layer/odometry/global', '/navigation_layer/odometry/local', '/hardware_layer/diff_cont/odom', '/hardware_layer/imu/data_raw', '/navsat', '/hardware_layer/joint_states']` | Topics to record |
 | `max_duration` | int | `0` | Max recording time (seconds, 0=unlimited) |
 | `max_size` | int | `0` | Max bag size (bytes, 0=unlimited) |
 | `compression_mode` | string | `none` | Compression mode (`none`, `file`, `message`) |
@@ -298,11 +302,14 @@ To extend for new sensors (camera, lidar, wheel odometry):
 1. **Edit YAML Config**:
    ```yaml
    topics:
-     - '/imu/raw_data'    # IMU data
-     - '/fix'             # GNSS data
-     - '/camera/image'    # Camera data
-     - '/scan'            # Lidar data
-     - '/odom'            # Wheel odometry
+     - '/navigation_layer/odometry/global'  # Global odometry
+     - '/navigation_layer/odometry/local'   # Local odometry
+     - '/hardware_layer/diff_cont/odom'     # Diff controller odometry
+     - '/hardware_layer/imu/data_raw'       # IMU data
+     - '/navsat'                            # Navigation satellite
+     - '/hardware_layer/joint_states'       # Joint states
+     - '/camera/image'                      # Camera data
+     - '/scan'                              # Lidar data
    ```
 
 2. **Extension Points**: Code includes marked extension points for easy expansion
@@ -329,7 +336,7 @@ mkdir -p /home/dev/ros2_bags
 ```bash
 # Check if sensor nodes are running
 ros2 topic list
-ros2 topic echo /imu/raw_data
+ros2 topic echo /hardware_layer/imu/data_raw
 ```
 
 ### Debug Mode
@@ -370,13 +377,13 @@ ros2 launch bag_recorder bag_record.launch.py \
 source install/setup.bash && mkdir -p ~/ros2_bags
 
 # Record sensor data with timestamp-based naming and 10-second duration limit
-ros2 bag record -o ~/ros2_bags/sensor_data_$(date +%Y%m%d_%H%M%S) /imu/data_raw /fix --max-bag-duration 10
+ros2 bag record -o ~/ros2_bags/sensor_data_$(date +%Y%m%d_%H%M%S) /navigation_layer/odometry/global /navigation_layer/odometry/local /hardware_layer/diff_cont/odom /hardware_layer/imu/data_raw /navsat /hardware_layer/joint_states --max-bag-duration 10
 
 # Record with custom parameters
-ros2 bag record -o ~/ros2_bags/my_recording /imu/data_raw /fix --max-bag-duration 60 --compression-mode file
+ros2 bag record -o ~/ros2_bags/my_recording /navigation_layer/odometry/global /navigation_layer/odometry/local /hardware_layer/diff_cont/odom /hardware_layer/imu/data_raw /navsat /hardware_layer/joint_states --max-bag-duration 60 --compression-mode file
 
 # Record unlimited duration (press Ctrl+C to stop)
-ros2 bag record -o ~/ros2_bags/continuous_recording /imu/data_raw /fix
+ros2 bag record -o ~/ros2_bags/continuous_recording /navigation_layer/odometry/global /navigation_layer/odometry/local /hardware_layer/diff_cont/odom /hardware_layer/imu/data_raw /navsat /hardware_layer/joint_states
 ```
 
 ## Working with Recorded Data
@@ -400,7 +407,7 @@ ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --rate 0.5  # Half speed
 ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --rate 2.0  # Double speed
 
 # Play specific topics only
-ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --topics /imu/data_raw
+ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --topics /hardware_layer/imu/data_raw
 
 # Loop playback
 ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --loop
@@ -412,7 +419,7 @@ ros2 bag play ~/ros2_bags/sensor_data_20250806_154235 --loop
 ros2 bag convert --input ~/ros2_bags/sensor_data_20250806_154235 --output-format csv
 
 # List all messages in a topic
-ros2 topic echo /imu/data_raw --once  # While playing bag
+ros2 topic echo /hardware_layer/imu/data_raw --once  # While playing bag
 ```
 
 ## Package Structure

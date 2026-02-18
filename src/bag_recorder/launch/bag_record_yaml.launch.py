@@ -15,6 +15,12 @@ def generate_launch_description():
         description='YAML config file name (bag_config.yaml, compressed_config.yaml, extended_sensors_config.yaml)'
     )
     
+    output_dir_arg = DeclareLaunchArgument(
+        'output_dir',
+        default_value='',
+        description='Override output directory (leave empty to use config file value)'
+    )
+    
     # Get the config file path
     config_file_path = PathJoinSubstitution([
         FindPackageShare('bag_recorder'),
@@ -28,7 +34,14 @@ def generate_launch_description():
         executable='bag_recorder_node.py',
         name='bag_recorder',
         output='screen',
-        parameters=[config_file_path]
+        parameters=[
+            config_file_path,
+            {
+                'output_dir': LaunchConfiguration('output_dir')
+            }
+        ],
+        # Only override output_dir if provided
+        condition=lambda context: True
     )
     
     # Log info about the recording
@@ -42,6 +55,7 @@ def generate_launch_description():
     
     return LaunchDescription([
         config_file_arg,
+        output_dir_arg,
         log_info,
         bag_recorder_node,
     ])

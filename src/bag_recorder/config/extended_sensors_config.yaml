@@ -6,8 +6,12 @@ bag_recorder:
     
     # Extended sensor topics (example for future use)
     topics: [
-      "/imu/raw_data", 
-      "/fix",
+      "/navigation_layer/odometry/global",
+      "/navigation_layer/odometry/local",
+      "/hardware_layer/diff_cont/odom",
+      "/hardware_layer/imu/data_raw",
+      "/navsat",
+      "/hardware_layer/joint_states",
       # Uncomment below when these sensors are available:
       # "/camera/image_raw",
       # "/camera/camera_info", 
