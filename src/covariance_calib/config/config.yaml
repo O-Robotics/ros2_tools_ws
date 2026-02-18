@@ -1,0 +1,93 @@
+# Configuration for covariance calculation
+
+# Time window settings
+windows:
+  stationary:
+    # Remove startup transients and ending effects
+    trim_start: 30.0    # seconds to trim from start
+    trim_end: 30.0      # seconds to trim from end
+    min_duration: 30.0  # minimum duration after trimming
+    
+  slow_spin:
+    # Use angular velocity threshold to detect actual spinning
+    angular_vel_threshold: 0.05  # rad/s - minimum to consider "spinning"
+    trim_start: 10.0    # seconds to trim from start
+    trim_end: 10.0      # seconds to trim from end
+    min_duration: 30.0  # minimum duration after trimming
+    
+  slow_straight:
+    # Use linear velocity threshold to detect actual movement
+    linear_vel_threshold: 0.02   # m/s - minimum to consider "moving"
+    trim_start: 10.0    # seconds to trim from start
+    trim_end: 10.0      # seconds to trim from end
+    min_duration: 30.0  # minimum duration after trimming
+
+# Sample filtering
+filtering:
+  min_samples: 100        # minimum samples required for valid calculation
+  outlier_removal: true   # remove statistical outliers
+  outlier_std_threshold: 3.0  # standard deviations for outlier detection
+  
+# Output settings
+output:
+  # What to calculate and include in results
+  imu:
+    angular_velocity: true
+    linear_acceleration: true
+    orientation: false      # often unreliable, skip for now
+    
+  odom:
+    twist_linear: true
+    twist_angular: true
+    pose: false            # pose often affected by integration drift
+    
+  # Additional analysis
+  analysis:
+    rate_estimation: true   # estimate actual message rates
+    gap_analysis: true      # analyze message timing gaps
+    dynamic_inflation: true # calculate dynamic vs static noise ratio
+    
+  # Report generation
+  report:
+    generate_markdown: true
+    generate_yaml_config: true
+    include_plots: false    # set to true if matplotlib available
+    
+# Quality thresholds
+quality:
+  min_rate:
+    imu: 10.0      # Hz - minimum acceptable IMU rate
+    odom: 10.0     # Hz - minimum acceptable odometry rate
+    
+  max_gap:
+    imu: 0.1       # seconds - maximum acceptable gap between IMU messages
+    odom: 0.5      # seconds - maximum acceptable gap between odom messages
+    
+  variance_limits:
+    # Sanity checks - warn if calculated variances are outside these ranges
+    imu:
+      angular_velocity:
+        min: 1e-6    # rad²/s²
+        max: 1e-1    # rad²/s²
+      linear_acceleration:
+        min: 1e-4    # m²/s⁴
+        max: 1e1     # m²/s⁴
+        
+    odom:
+      twist_linear:
+        min: 1e-6    # m²/s²
+        max: 1e-1    # m²/s²
+      twist_angular:
+        min: 1e-6    # rad²/s²
+        max: 1e-1    # rad²/s²
+
+# Default topics (can be overridden by command line)
+topics:
+  imu: "/hardware_layer/imu/data_raw"
+  odom: "/hardware_layer/diff_cont/odom"
+  
+# Phases to analyze (can be overridden by command line)
+phases:
+  - stationary
+  - slow_spin
+  - slow_straight

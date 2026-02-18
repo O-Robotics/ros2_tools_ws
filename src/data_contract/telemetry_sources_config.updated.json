@@ -1,0 +1,50 @@
+{
+  "telemetry_config_version": 1,
+  "robot_profile": "amr-sweeper",
+  "sources": {
+    "/hardware_layer/diff_cont/odom": {
+      "msg_type": "nav_msgs/Odometry",
+      "frame_id": "odom",
+      "child_frame_id": "base_link",
+      "fields": ["pose", "twist", "cov_pose", "cov_twist"]
+    },
+    "/hardware_layer/imu/data_raw": {
+      "msg_type": "sensor_msgs/Imu",
+      "frame_id": "imu_link",
+      "fields": [
+        "orientation",
+        "angular_velocity",
+        "linear_acceleration",
+        "cov_*"
+      ]
+    },
+    "/hardware_layer/navsat": {
+      "msg_type": "sensor_msgs/NavSatFix",
+      "frame_id": "GNSS_link",
+      "fields": ["lat", "lon", "alt", "status", "covariance"]
+    },
+    "/navigation_layer/odometry/local": {
+      "msg_type": "nav_msgs/Odometry",
+      "frame_id": "odom",
+      "child_frame_id": "base_link",
+      "fields": ["pose", "twist", "cov_pose", "cov_twist"]
+    },
+    "/navigation_layer/gps/filtered": {
+      "msg_type": "sensor_msgs/NavSatFix",
+      "frame_id": "base_link",
+      "fields": ["lat", "lon", "alt", "status", "covariance"]
+    },
+    "/navigation_layer/odometry/gps": {
+      "msg_type": "nav_msgs/Odometry",
+      "frame_id": "odom",
+      "child_frame_id": "",
+      "fields": ["pose", "twist", "cov_pose", "cov_twist"]
+    },
+    "/navigation_layer/odometry/global": {
+      "msg_type": "nav_msgs/Odometry",
+      "frame_id": "map",
+      "child_frame_id": "base_link",
+      "fields": ["pose", "twist", "cov_pose", "cov_twist"]
+    }
+  }
+}

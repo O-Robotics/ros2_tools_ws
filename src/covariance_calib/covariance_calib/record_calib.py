@@ -12,13 +12,19 @@ import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
+from ament_index_python.packages import get_package_share_directory
 
 
 class CalibrationRecorder:
     def __init__(self, config_file="topics.yaml"):
         """Initialize the calibration recorder with topic configuration."""
-        self.script_dir = Path(__file__).parent
-        self.config_path = self.script_dir / config_file
+        try:
+            # Get config from ROS2 package share directory
+            package_share_directory = get_package_share_directory('covariance_calib')
+            self.config_path = Path(package_share_directory) / 'config' / config_file
+        except Exception:
+            # Fallback to local path for development
+            self.config_path = Path(__file__).parent.parent / 'tools' / 'localization_calib' / 'record' / config_file
         
         if not self.config_path.exists():
             raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
@@ -209,59 +215,40 @@ def main():
         epilog="""
 Examples:
   # Record all phases with default durations
-  python record_calib.py --all
+  ros2 run covariance_calib record_calib --all
   
   # Record specific phase
-  python record_calib.py --phase stationary --duration 60
+  ros2 run covariance_calib record_calib --phase stationary --duration 60
   
   # Custom output directory
-  python record_calib.py --all --output ../data/bags/2026-02-18/
+  ros2 run covariance_calib record_calib --all --output ~/calib_data/
         """
     )
     
-    parser.add_argument('--phase', 
-                       choices=['stationary', 'slow_spin', 'slow_straight'],
-                       help='Record specific phase')
-    parser.add_argument('--all', action='store_true',
-                       help='Record all phases')
-    parser.add_argument('--duration', type=int, default=90,
-                       help='Recording duration in seconds (default: 90)')
-    parser.add_argument('--output', type=str,
-                       help='Output directory (default: ../data/bags/YYYY-MM-DD/)')
-    parser.add_argument('--config', type=str, default='topics.yaml',
-                       help='Configuration file (default: topics.yaml)')
-    parser.add_argument('--skip-check', action='store_true',
-                       help='Skip prerequisites check')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--phase', choices=['stationary', 'slow_spin', 'slow_straight'],
+                      help='Record specific calibration phase')
+    group.add_argument('--all', action='store_true',
+                      help='Record all calibration phases sequentially')
+    
+    parser.add_argument('--duration', type=int, default=120,
+                       help='Recording duration in seconds (default: 120)')
+    parser.add_argument('--output', type=str, default='data/bags',
+                       help='Output directory for bag files (default: data/bags)')
     
     args = parser.parse_args()
     
-    # Validate arguments
-    if not args.phase and not args.all:
-        parser.error("Must specify either --phase or --all")
-        
-    if args.phase and args.all:
-        parser.error("Cannot specify both --phase and --all")
-        
     try:
-        # Initialize recorder
-        recorder = CalibrationRecorder(args.config)
+        recorder = CalibrationRecorder()
         
         # Check prerequisites
-        if not args.skip_check and not recorder.check_prerequisites():
+        if not recorder.check_prerequisites():
             sys.exit(1)
-            
-        # Set up output directory
-        if args.output:
-            output_dir = Path(args.output)
-        else:
-            # Default to ../data/bags/YYYY-MM-DD/
-            script_dir = Path(__file__).parent
-            data_dir = script_dir.parent / 'data' / 'bags'
-            output_dir = recorder.create_output_dir(data_dir)
-            
+        
+        # Create output directory
+        output_dir = recorder.create_output_dir(args.output)
         print(f"Output directory: {output_dir}")
         
-        # Record data
         if args.all:
             print("Recording all calibration phases...")
             results = recorder.record_all_phases(args.duration, output_dir)
@@ -272,21 +259,20 @@ Examples:
             print(f"{'='*60}")
             for phase, success in results.items():
                 status = "✓ SUCCESS" if success else "✗ FAILED"
-                print(f"{phase:15} {status}")
+                print(f"{phase:15} : {status}")
                 
         else:
-            print(f"Recording single phase: {args.phase}")
+            print(f"Recording {args.phase} phase...")
             success = recorder.record_phase(args.phase, args.duration, output_dir)
-            
             if success:
-                print(f"\n✓ Successfully recorded {args.phase} phase")
+                print(f"\n✓ Recording completed successfully")
             else:
-                print(f"\n✗ Failed to record {args.phase} phase")
+                print(f"\n✗ Recording failed")
                 sys.exit(1)
                 
-        print(f"\nRecorded data saved to: {output_dir}")
-        print("Next step: Run calculate_cov.py to analyze the recorded data")
-        
+    except KeyboardInterrupt:
+        print("\nRecording interrupted by user")
+        sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)

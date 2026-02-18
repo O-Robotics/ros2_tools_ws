@@ -1,0 +1,243 @@
+{
+  "message_id": "550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2026-01-29T10:20:05.842Z",
+  "schema_version": 1,
+  "telemetry_config_version": 1,
+  "payload": {
+    "sources": {
+      "/hardware_layer/diff_cont/odom": {
+        "stamp": "2026-01-29T10:19:59.900Z",
+        "pose": {
+          "x_m": 0.0,
+          "y_m": 0.0,
+          "yaw_rad": 0.0
+        },
+        "twist": {
+          "vx_mps": 0.0,
+          "vy_mps": 0.0,
+          "yaw_rate_rps": 0.0
+        },
+        "cov_pose": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cov_twist": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "/hardware_layer/imu/data_raw": {
+        "stamp": "2026-01-29T10:19:59.900Z",
+        "orientation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "angular_velocity": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "linear_acceleration": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "cov_orientation": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cov_angular_velocity": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cov_linear_acceleration": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "/navsat": {
+        "stamp": "2026-01-29T10:19:59.900Z",
+        "lat_deg": 0.0,
+        "lon_deg": 0.0,
+        "alt_m": 0.0,
+        "fix": {
+          "status_code": 0
+        },
+        "cov": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "/navigation_layer/odometry/local": {
+        "stamp": "2026-01-29T10:19:59.900Z",
+        "pose": {
+          "x_m": 0.0,
+          "y_m": 0.0,
+          "yaw_rad": 0.0
+        },
+        "twist": {
+          "vx_mps": 0.0,
+          "vy_mps": 0.0,
+          "yaw_rate_rps": 0.0
+        },
+        "cov_pose": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cov_twist": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "/navigation_layer/gps/filtered": {
+        "stamp": "2026-01-29T10:19:59.900Z",
+        "lat_deg": 0.0,
+        "lon_deg": 0.0,
+        "alt_m": 0.0,
+        "fix": {
+          "status_code": 0,
+          "cov_type": 0
+        },
+        "cov": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "/navigation_layer/odometry/gps": {
+        "stamp": "2026-01-29T10:19:59.900Z",
+        "pose": {
+          "x_m": 0.0,
+          "y_m": 0.0,
+          "yaw_rad": 0.0
+        },
+        "twist": {
+          "vx_mps": 0.0,
+          "vy_mps": 0.0,
+          "yaw_rate_rps": 0.0
+        },
+        "cov_pose": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cov_twist": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "/navigation_layer/odometry/global": {
+        "stamp": "2026-01-29T10:19:59.900Z",
+        "pose": {
+          "x_m": 0.0,
+          "y_m": 0.0,
+          "yaw_rad": 0.0
+        },
+        "twist": {
+          "vx_mps": 0.0,
+          "vy_mps": 0.0,
+          "yaw_rate_rps": 0.0
+        },
+        "cov_pose": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cov_twist": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  }
+}

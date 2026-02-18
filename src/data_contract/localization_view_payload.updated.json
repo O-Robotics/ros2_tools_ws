@@ -1,0 +1,16 @@
+{
+  "message_id": "550e8400-e29b-41d4-a716-446655440001",
+  "timestamp": "2026-01-29T10:15:01.214Z",
+  "schema_version": 1,
+  "payload": {
+    "fused_geo": {
+      "lat_deg": 55.36863279,
+      "lon_deg": 10.41296541,
+      "source": "gps_filtered"
+    },
+    "heading": { "yaw_rad": 0.36227291 },
+    "velocity2d": { "vx_mps": 0.00014227, "yaw_rate_rps": 0.47124872 },
+    "uncertainty": { "pos_sigma_m": 1.5, "yaw_sigma_rad": 0.4 },
+    "status": { "confidence": 0.62, "level": "WARN" }
+  }
+}
