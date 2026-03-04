@@ -1,0 +1,39 @@
+covariance_calculator:
+  ros__parameters:
+    # Data paths
+    data_directory: "data/my_bags_outdoor_25"
+    stationary_bag: "stationary_recording"
+    spin_bag: "slow_spin_recording"
+    straight_bag: "slow_straight_recording"
+    
+    # Topic names
+    imu_topic: "/hardware_layer/imu/data_raw"
+    odom_topic: "/hardware_layer/diff_cont/odom"
+    joint_states_topic: "/hardware_layer/joint_states"
+    
+    # Analysis parameters
+    stationary_detection:
+      wheel_velocity_threshold: 0.01  # rad/s, threshold for considering robot stationary
+      min_stationary_duration: 2.0   # seconds, minimum duration to consider as stationary
+    
+    # Covariance calculation settings
+    imu_analysis:
+      target_variables: ["yaw", "yaw_rate"]  # Focus on yaw and yaw rate
+      use_quaternion_for_yaw: true           # Extract yaw from quaternion
+      filter_outliers: true                  # Remove statistical outliers
+      outlier_std_threshold: 3.0             # Standard deviations for outlier detection
+    
+    odom_analysis:
+      target_variables: ["velocity_x", "velocity_y"]  # Focus on linear velocities
+      filter_outliers: true
+      outlier_std_threshold: 3.0
+    
+    # Output settings
+    output_directory: "results"
+    generate_plots: true
+    save_raw_data: true
+    
+    # Future analysis methods (reserved for Allan variance, etc.)
+    advanced_analysis:
+      enable_allan_variance: false
+      enable_spectral_analysis: false
