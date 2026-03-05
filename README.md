@@ -27,6 +27,37 @@ ros2 launch bag_recorder bag_record.launch.py \
 - Stop Recording
 - Press `Ctrl+C` to stop recording gracefully.
 
+### Tips
+
+Recomendations: 
+- bag_name: ~/my_bags_outdoor_030526: With where and date like day-month-year
+- compression_format: `none`: You need to decompress before using covariance calculator
+- storage_format: `mcap`: It can be replayed in Foxglove directly
+
+### topic it records for now
+```
+/navigation_layer/odometry/global
+/navigation_layer/odometry/local
+/hardware_layer/diff_cont/odom
+/hardware_layer/imu/data_raw
+/navsat
+/hardware_layer/joint_states
+```
+### how to change the topic
+
+#### one time usage
+```
+ros2 launch bag_recorder bag_record.launch.py \
+  topics:='["/my_topic1", "/my_topic2", "/camera/image_raw"]'
+```
+
+#### change the file
+You will need to change `\bag_recorder.py` and `\launch\bag_record.launch.py`
+
+
+
+
+
 
 
 
