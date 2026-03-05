@@ -2,7 +2,35 @@
 
 ROS2 packages like ros2 bag recorder, sensor covariance calculator, etc
 
-## Quick Start
+
+## Bag recorder
+
+### Full configuration example
+```bash
+ros2 launch bag_recorder bag_record.launch.py \
+  output_dir:="~/my_bags" \
+  bag_name:="my_recording" \
+  max_duration:="300" \
+  max_size:="1000" \
+  compression_mode:="none" \
+  storage_format:="mcap"
+```
+
+### Parameters
+- output_dir: Directory to save bag files (default: ~/ros2_bags)
+- bag_name: Custom bag name (default: auto-generated with timestamp)
+- max_duration: Maximum recording time in seconds (0 = unlimited)
+- max_size: Maximum file size in MB (0 = unlimited)
+- compression_mode: `none`, `file`, or `message` (default: none)
+- compression_format: `none`, `zstd` or `lz4` (default: zstd)
+- storage_format: `sqlite3` or `mcap` (default: sqlite3)
+- Stop Recording
+- Press `Ctrl+C` to stop recording gracefully.
+
+
+
+
+## Outdated
 
 ### Option 1: Build All Packages
 ```bash
