@@ -1,6 +1,6 @@
-# Localization Workspace
+# Tools Workspace
 
-ROS2 workspace for autonomous mobile robot localization using GNSS and IMU sensor fusion.
+ROS2 packages like ros2 bag recorder, sensor covariance calculator, etc
 
 ## Quick Start
 
