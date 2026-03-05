@@ -118,6 +118,7 @@ class DataAnalyzer:
     def _read_bag_database(self, bag_path: str) -> Dict[str, List]:
         """
         Read messages from a bag directory using rosbag2_py.
+        Only reads .db3 files, ignores compressed files.
         
         Args:
             bag_path: Path to the bag directory
@@ -128,7 +129,20 @@ class DataAnalyzer:
         data = {'imu': [], 'odom': [], 'joint_states': []}
         
         try:
-            # Setup storage options
+            # Check if .db3 files exist
+            db3_files = []
+            for file in os.listdir(bag_path):
+                if file.endswith('.db3'):
+                    db3_files.append(file)
+            
+            if not db3_files:
+                print(f"No .db3 files found in {bag_path}")
+                print(f"Please ensure bag files are decompressed to .db3 format")
+                return data
+            
+            print(f"Found {len(db3_files)} .db3 files: {db3_files}")
+            
+            # Setup storage options for bag directory
             storage_options = StorageOptions(uri=bag_path, storage_id='sqlite3')
             converter_options = ConverterOptions(
                 input_serialization_format='cdr',
@@ -169,7 +183,7 @@ class DataAnalyzer:
                     print(f"Error deserializing message from topic {topic}: {e}")
                     continue
             
-            reader.close()
+            # Note: SequentialReader doesn't have a close() method
             
         except Exception as e:
             print(f"Error reading bag {bag_path}: {e}")
