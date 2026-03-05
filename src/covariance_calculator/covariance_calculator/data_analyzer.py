@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import sqlite3
 import numpy as np
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
@@ -10,6 +9,7 @@ from rclpy.serialization import deserialize_message
 from rosidl_runtime_py.utilities import get_message
 from sensor_msgs.msg import Imu, JointState
 from nav_msgs.msg import Odometry
+from rosbag2_py import SequentialReader, StorageOptions, ConverterOptions
 from .utils import quaternion_to_yaw, remove_outliers, validate_bag_data
 
 
@@ -96,13 +96,8 @@ class DataAnalyzer:
                     print(f"Please decompress them manually or install zstd")
                 return False
             
-            # Load data from all database files
-            all_data = {'imu': [], 'odom': [], 'joint_states': []}
-            
-            for db_file in db_files:
-                data = self._read_bag_database(db_file)
-                for topic, messages in data.items():
-                    all_data[topic].extend(messages)
+            # Load data using rosbag2_py API
+            all_data = self._read_bag_database(bag_path)
             
             # Sort by timestamp
             for topic in all_data:
@@ -133,12 +128,12 @@ class DataAnalyzer:
             print(f"Error loading bag data: {e}")
             return False
     
-    def _read_bag_database(self, db_file: str) -> Dict[str, List]:
+    def _read_bag_database(self, bag_path: str) -> Dict[str, List]:
         """
-        Read messages from a bag database file.
+        Read messages from a bag directory using rosbag2_py.
         
         Args:
-            db_file: Path to the .db3 file
+            bag_path: Path to the bag directory
             
         Returns:
             Dictionary with topic data
@@ -146,48 +141,51 @@ class DataAnalyzer:
         data = {'imu': [], 'odom': [], 'joint_states': []}
         
         try:
-            conn = sqlite3.connect(db_file)
-            cursor = conn.cursor()
+            # Setup storage options
+            storage_options = StorageOptions(uri=bag_path, storage_id='sqlite3')
+            converter_options = ConverterOptions(
+                input_serialization_format='cdr',
+                output_serialization_format='cdr'
+            )
             
-            # Get topic information
-            cursor.execute("SELECT id, name, type FROM topics")
-            topics = {row[0]: {'name': row[1], 'type': row[2]} for row in cursor.fetchall()}
+            # Create reader
+            reader = SequentialReader()
+            reader.open(storage_options, converter_options)
+            
+            # Get topic types
+            topic_types = reader.get_all_topics_and_types()
+            type_map = {topic.name: topic.type for topic in topic_types}
             
             # Read messages
-            cursor.execute("SELECT topic_id, timestamp, data FROM messages ORDER BY timestamp")
-            
-            for topic_id, timestamp, data in cursor.fetchall():
-                if topic_id not in topics:
-                    continue
-                
-                topic_info = topics[topic_id]
-                topic_name = topic_info['name']
-                msg_type = topic_info['type']
+            while reader.has_next():
+                (topic, data_bytes, timestamp) = reader.read_next()
                 
                 # Convert timestamp from nanoseconds to seconds
                 timestamp_sec = timestamp / 1e9
                 
                 try:
-                    # Deserialize message
-                    msg_class = get_message(msg_type)
-                    msg = deserialize_message(data, msg_class)
-                    
-                    # Store based on topic
-                    if topic_name == self.config.get('imu_topic', '/hardware_layer/imu/data_raw'):
-                        data['imu'].append((timestamp_sec, msg))
-                    elif topic_name == self.config.get('odom_topic', '/hardware_layer/diff_cont/odom'):
-                        data['odom'].append((timestamp_sec, msg))
-                    elif topic_name == self.config.get('joint_states_topic', '/hardware_layer/joint_states'):
-                        data['joint_states'].append((timestamp_sec, msg))
+                    # Get message type and deserialize
+                    if topic in type_map:
+                        msg_type = type_map[topic]
+                        msg_class = get_message(msg_type)
+                        msg = deserialize_message(data_bytes, msg_class)
                         
+                        # Store based on topic
+                        if topic == self.config.get('imu_topic', '/hardware_layer/imu/data_raw'):
+                            data['imu'].append((timestamp_sec, msg))
+                        elif topic == self.config.get('odom_topic', '/hardware_layer/diff_cont/odom'):
+                            data['odom'].append((timestamp_sec, msg))
+                        elif topic == self.config.get('joint_states_topic', '/hardware_layer/joint_states'):
+                            data['joint_states'].append((timestamp_sec, msg))
+                            
                 except Exception as e:
-                    print(f"Error deserializing message: {e}")
+                    print(f"Error deserializing message from topic {topic}: {e}")
                     continue
             
-            conn.close()
+            reader.close()
             
         except Exception as e:
-            print(f"Error reading database {db_file}: {e}")
+            print(f"Error reading bag {bag_path}: {e}")
         
         return data
     
