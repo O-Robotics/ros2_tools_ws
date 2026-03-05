@@ -59,14 +59,41 @@ class DataAnalyzer:
             True if successful, False otherwise
         """
         try:
-            # Find the database file
+            # Find the database file (both compressed and uncompressed)
             db_files = []
+            compressed_files = []
+            
             for file in os.listdir(bag_path):
                 if file.endswith('.db3'):
                     db_files.append(os.path.join(bag_path, file))
+                elif file.endswith('.db3.zstd'):
+                    compressed_files.append(os.path.join(bag_path, file))
+            
+            # If we have compressed files but no uncompressed ones, decompress them
+            if not db_files and compressed_files:
+                print(f"Found compressed bag files, decompressing...")
+                import subprocess
+                for compressed_file in compressed_files:
+                    try:
+                        result = subprocess.run(['zstd', '-d', compressed_file], 
+                                              capture_output=True, text=True, check=True)
+                        # Add the decompressed file to db_files
+                        decompressed_file = compressed_file.replace('.db3.zstd', '.db3')
+                        if os.path.exists(decompressed_file):
+                            db_files.append(decompressed_file)
+                            print(f"Decompressed: {os.path.basename(compressed_file)}")
+                    except subprocess.CalledProcessError as e:
+                        print(f"Failed to decompress {compressed_file}: {e}")
+                    except FileNotFoundError:
+                        print(f"zstd command not found. Please install zstd or decompress files manually.")
+                        print(f"Run: sudo apt install zstd")
+                        return False
             
             if not db_files:
                 print(f"No .db3 files found in {bag_path}")
+                if compressed_files:
+                    print(f"Found compressed files: {[os.path.basename(f) for f in compressed_files]}")
+                    print(f"Please decompress them manually or install zstd")
                 return False
             
             # Load data from all database files
