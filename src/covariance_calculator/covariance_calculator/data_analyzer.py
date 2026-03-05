@@ -59,7 +59,7 @@ class DataAnalyzer:
             True if successful, False otherwise
         """
         try:
-            # Find the database file (both compressed and uncompressed)
+            # Find uncompressed database files first
             db_files = []
             compressed_files = []
             
@@ -69,31 +69,18 @@ class DataAnalyzer:
                 elif file.endswith('.db3.zstd'):
                     compressed_files.append(os.path.join(bag_path, file))
             
-            # If we have compressed files but no uncompressed ones, decompress them
-            if not db_files and compressed_files:
-                print(f"Found compressed bag files, decompressing...")
-                import subprocess
+            # Prioritize existing .db3 files over compressed ones
+            if db_files:
+                print(f"Found {len(db_files)} uncompressed .db3 files")
+            elif compressed_files:
+                print(f"Found {len(compressed_files)} compressed files, but no .db3 files")
+                print(f"Please decompress them manually first:")
                 for compressed_file in compressed_files:
-                    try:
-                        result = subprocess.run(['zstd', '-d', compressed_file], 
-                                              capture_output=True, text=True, check=True)
-                        # Add the decompressed file to db_files
-                        decompressed_file = compressed_file.replace('.db3.zstd', '.db3')
-                        if os.path.exists(decompressed_file):
-                            db_files.append(decompressed_file)
-                            print(f"Decompressed: {os.path.basename(compressed_file)}")
-                    except subprocess.CalledProcessError as e:
-                        print(f"Failed to decompress {compressed_file}: {e}")
-                    except FileNotFoundError:
-                        print(f"zstd command not found. Please install zstd or decompress files manually.")
-                        print(f"Run: sudo apt install zstd")
-                        return False
-            
-            if not db_files:
-                print(f"No .db3 files found in {bag_path}")
-                if compressed_files:
-                    print(f"Found compressed files: {[os.path.basename(f) for f in compressed_files]}")
-                    print(f"Please decompress them manually or install zstd")
+                    print(f"  zstd -d {compressed_file}")
+                print(f"Or install zstd: sudo apt install zstd")
+                return False
+            else:
+                print(f"No bag database files found in {bag_path}")
                 return False
             
             # Load data using rosbag2_py API
