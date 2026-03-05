@@ -31,7 +31,7 @@ ros2 launch bag_recorder bag_record.launch.py \
 
 Recomendations: 
 - bag_name: ~/my_bags_outdoor_030526: With where and date like day-month-year
-- compression_format: `none`: You need to decompress before using covariance calculator
+- compression_format: `none`: You need to decompress before using covariance calculator, so better not compress if it's not big
 - storage_format: `mcap`: It can be replayed in Foxglove directly
 
 ### topic it records for now
