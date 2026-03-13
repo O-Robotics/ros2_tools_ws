@@ -8,7 +8,7 @@ ROS2 packages like ros2 bag recorder, sensor covariance calculator, etc
 ### Full configuration example
 ```bash
 ros2 launch bag_recorder bag_record.launch.py \
-  output_dir:="~/my_bags" \
+  output_dir:="~/robot8_aarhus_indoor_031326" \
   bag_name:="my_recording" \
   max_duration:="300" \
   max_size:="1000" \
@@ -30,7 +30,7 @@ ros2 launch bag_recorder bag_record.launch.py \
 ### Tips
 
 Recomendations: 
-- bag_name: ~/my_bags_outdoor_030526: With where and date like day-month-year
+- bag_name: ~/robot8_aarhus_outdoor_031326: With which robot, where, indoor or outdoor and date like day-month-year
 - compression_format: `none`: You need to decompress before using covariance calculator, so better not compress if it's not big
 - storage_format: `mcap`: It can be replayed in Foxglove directly
 
