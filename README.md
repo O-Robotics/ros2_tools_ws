@@ -53,7 +53,7 @@ ros2 launch bag_recorder bag_record.launch.py \
 
 #### change the file
 You will need to change `\bag_recorder.py` and `\launch\bag_record.launch.py`
-
+Or feel free to have your own launch file for specific topics
 
 
 
